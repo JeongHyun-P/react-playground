@@ -1,0 +1,1 @@
+# context - React Context API를 통해 전역 상태를 관리하는 파일들을 모아둔 디렉토리.
