@@ -1,8 +1,11 @@
+import { useUserStore } from '../stores/useUserStore';
+
 const Home = () => {
+  const { user, setUser } = useUserStore();
+
   const onClickGetRequest = async () => {
     try {
-      const data = await $get<{ id: number; title: string }>('common/app/version');
-      // const data = await $get<{ id: number; title: string }>('user');
+      const data = await $get<{ id: number; title: string }>('user');
       console.log('API 응답:', data);
     } catch (err: any) {
       console.error('API 오류:', err.message);
@@ -44,8 +47,17 @@ const Home = () => {
     input.click();
   };
 
+  const onClickSetUser = () => {
+    setUser({ name: 'park' });
+  };
+
+  const onClickClearUser = () => {
+    setUser(null);
+  };
+
   return (
     <div>
+      <p>{user?.name}</p>
       <button onClick={() => $toast('토스트!')}>toast</button>
       <button onClick={() => $alert('알러트!', () => console.log('확인'))}>alert</button>
       <button
@@ -62,6 +74,8 @@ const Home = () => {
       <button onClick={() => onClickGetRequest()}>get request</button>
       <button onClick={() => onClickSetToken()}>set token</button>
       <button onClick={() => onClickUpload()}>upload file</button>
+      <button onClick={() => onClickSetUser()}>setUser</button>
+      <button onClick={() => onClickClearUser()}>clearUser</button>
     </div>
   );
 };
