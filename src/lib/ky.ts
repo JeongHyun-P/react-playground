@@ -1,4 +1,5 @@
 import ky, { HTTPError } from 'ky';
+import { ApiResponse } from '../types/api';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 interface ErrorResponse {
@@ -52,27 +53,27 @@ const api = ky.create({
 
 // GET
 async function $get<T>(url: string, query?: Record<string, any>) {
-  return api.get(url, { searchParams: query }).json<T>();
+  return api.get(url, { searchParams: query }).json<ApiResponse<T>>();
 }
 
 // POST
 async function $post<T>(url: string, body?: any) {
   const isFormData = body instanceof FormData;
-  return api.post(url, isFormData ? { body } : { json: body }).json<T>();
+  return api.post(url, isFormData ? { body } : { json: body }).json<ApiResponse<T>>();
 }
 
 // PUT
 async function $put<T>(url: string, json?: any) {
-  return api.put(url, { json }).json<T>();
+  return api.put(url, { json }).json<ApiResponse<T>>();
 }
 
 // DELETE
 async function $delete<T>(url: string, json?: any) {
-  return api.delete(url, { json }).json<T>();
+  return api.delete(url, { json }).json<ApiResponse<T>>();
 }
 
 // 전역 등록
-type CustomKy = <T>(url: string, data?: any) => Promise<T>;
+type CustomKy = <T>(url: string, data?: any) => Promise<ApiResponse<T>>;
 declare global {
   var $api: typeof api;
   var $get: CustomKy;
