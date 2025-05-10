@@ -1,5 +1,5 @@
 const Home = () => {
-  const onClickGetRequest = async() => {
+  const onClickGetRequest = async () => {
     try {
       const data = await $get<{ id: number; title: string }>('common/app/version');
       // const data = await $get<{ id: number; title: string }>('user');
@@ -7,15 +7,42 @@ const Home = () => {
     } catch (err: any) {
       console.error('API 오류:', err.message);
     }
-  }
+  };
 
-  const onClickSetToken = async() => {
+  const onClickSetToken = async () => {
     try {
       await $post('common/token', { id: 4 });
     } catch (err: any) {
       console.error('API 오류:', err.message);
     }
-  }
+  };
+
+  const onClickUpload = async () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+
+    input.onchange = async (event) => {
+      const target = event.target as HTMLInputElement;
+      const file = target.files?.[0];
+      if (!file) {
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        await $post('common/upload', formData);
+      } catch (err) {
+        console.error('업로드 실패:', err);
+      } finally {
+        input.remove();
+      }
+    };
+
+    input.click();
+  };
 
   return (
     <div>
@@ -34,6 +61,7 @@ const Home = () => {
       </button>
       <button onClick={() => onClickGetRequest()}>get request</button>
       <button onClick={() => onClickSetToken()}>set token</button>
+      <button onClick={() => onClickUpload()}>upload file</button>
     </div>
   );
 };
